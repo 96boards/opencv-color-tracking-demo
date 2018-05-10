@@ -119,29 +119,29 @@ def slider_init():
     Set up sliders
     '''
     #H value 
-    barH = Scale(master, from_=0, to=500, orient=HORIZONTAL, label="H min", length=600, tickinterval=250)
+    barH = Scale(master, from_=0, to=256, orient=HORIZONTAL, label="H min", length=600, tickinterval=128)
     barH.set(30)
     barH.pack()
 
-    barH2 = Scale(master, from_=0, to=500, orient=HORIZONTAL, label="H max", length=600, tickinterval=250)
+    barH2 = Scale(master, from_=0, to=256, orient=HORIZONTAL, label="H max", length=600, tickinterval=128)
     barH2.set(250)
     barH2.pack()
 
     #S value 
-    barS = Scale(master, from_=0, to=500, orient=HORIZONTAL,label="S min", length=600, tickinterval=250)
+    barS = Scale(master, from_=0, to=256, orient=HORIZONTAL,label="S min", length=600, tickinterval=128)
     barS.set(30)
     barS.pack()
 
-    barS2 = Scale(master, from_=0, to=500, orient=HORIZONTAL,label="S max", length=600, tickinterval=250)
+    barS2 = Scale(master, from_=0, to=256, orient=HORIZONTAL,label="S max", length=600, tickinterval=128)
     barS2.set(250)
     barS2.pack()
 
     #V value 
-    barV = Scale(master, from_=0, to=500, orient=HORIZONTAL,label="V min",  length=600, tickinterval=250)
+    barV = Scale(master, from_=0, to=256, orient=HORIZONTAL,label="V min",  length=600, tickinterval=128)
     barV.set(30)
     barV.pack()
 
-    barV2 = Scale(master, from_=0, to=500, orient=HORIZONTAL,label="V max",  length=600, tickinterval=250)
+    barV2 = Scale(master, from_=0, to=256, orient=HORIZONTAL,label="V max",  length=600, tickinterval=128)
     barV2.set(250)
     barV2.pack()
 
