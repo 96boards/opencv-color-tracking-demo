@@ -28,7 +28,7 @@ import cv2
 import MM
 import time
 import imutils
-import datetime
+import time
 
 
 kernelOp = np.ones((3,3),np.uint8)
@@ -43,47 +43,157 @@ kernelCl2 = np.ones((25,25),np.uint8)
 font = cv2.FONT_HERSHEY_SIMPLEX
 mm = []
 max_p_age = 5
-color_id = 0          # One for each color
-min_radius = 5        # Adjust to size of m & m. Impacted by distance from camera
+min_radius = 9        # Adjust to size of m & m. Impacted by distance from camera
 
 #DEBUG import pdb; pdb.set_trace() # Begin debug
 
-# Create color objects
+##########
+# Create color objects  
+# Note: Run the colorIsolationApp.py to define HSV min and max parms for each color.
+##########
+
+# RED
+color_id = 0          # One for each color
+redCircleColor = (0,0,255)
+redTextLocation = (10,25)
+
 red_hue_min = 0
 red_saturation_min = 81 
 red_value_min = 63 
 red_hsv_min=np.array([red_hue_min,red_saturation_min,red_value_min])
 
-red_hue_max = 12
+red_hue_max = 5
 red_saturation_max = 256 
 red_value_max = 148
 red_hsv_max=np.array([red_hue_max,red_saturation_max,red_value_max])
 
-mm.append(MM.M_and_M(color_id, "Red",red_hsv_min,red_hsv_max))  # Create Red Tracking Object
+mm.append(MM.M_and_M(color_id, "Red",redCircleColor, red_hsv_min,red_hsv_max,redTextLocation))  # Create Red Tracking Object
 
+# BLUE
+color_id += 1
+blueCircleColor = (255,0,0)
+blueTextLocation = (10,50)
 
-#TODO: Increment color_id for each new color
+blue_hue_min = 73
+blue_saturation_min = 145 
+blue_value_min = 63 
+blue_hsv_min=np.array([blue_hue_min,blue_saturation_min,blue_value_min])
 
+blue_hue_max = 132
+blue_saturation_max = 256 
+blue_value_max = 200
+blue_hsv_max=np.array([blue_hue_max,blue_saturation_max,blue_value_max])
 
+mm.append(MM.M_and_M(color_id, "Blue",blueCircleColor, blue_hsv_min,blue_hsv_max,blueTextLocation))  # Create Red Tracking Object
+
+# ORANGE
+color_id += 1
+orangeCircleColor = (0,125,255)
+orangeTextLocation = (10,75)
+
+orange_hue_min = 10
+orange_saturation_min = 181 
+orange_value_min = 79 
+orange_hsv_min=np.array([orange_hue_min,orange_saturation_min,orange_value_min,])
+
+orange_hue_max = 21
+orange_saturation_max = 256 
+orange_value_max = 256
+orange_hsv_max=np.array([orange_hue_max,orange_saturation_max,orange_value_max])
+
+mm.append(MM.M_and_M(color_id, "Orange",orangeCircleColor, orange_hsv_min,orange_hsv_max,orangeTextLocation))  # Create Red Tracking Object
+
+# YELLOW
+color_id += 1
+yellowCircleColor = (0,255,255)
+yellowTextLocation = (10,100)
+
+yellow_hue_min = 15
+yellow_saturation_min = 171 
+yellow_value_min = 61 
+yellow_hsv_min=np.array([yellow_hue_min,yellow_saturation_min,yellow_value_min])
+
+yellow_hue_max =41
+yellow_saturation_max = 256 
+yellow_value_max = 223
+yellow_hsv_max=np.array([yellow_hue_max,yellow_saturation_max,yellow_value_max])
+
+mm.append(MM.M_and_M(color_id, "Yellow", yellowCircleColor, yellow_hsv_min,yellow_hsv_max,yellowTextLocation))  # Create Red Tracking Object
+
+# BLACK
+color_id += 1
+blackCircleColor = (0,0,0)
+blackTextLocation = (10,125)
+
+black_hue_min = 12
+black_saturation_min = 63 
+black_value_min = 0 
+black_hsv_min=np.array([black_hue_min,black_saturation_min,black_value_min])
+
+black_hue_max = 82
+black_saturation_max = 256 
+black_value_max = 44
+black_hsv_max=np.array([black_hue_max,black_saturation_max,black_value_max])
+
+mm.append(MM.M_and_M(color_id, "Black", blackCircleColor, black_hsv_min,black_hsv_max,blackTextLocation ))  # Create Red Tracking Object
+
+# GREEN
+color_id += 1
+greenCircleColor = (0,255,0)
+greenTextLocation = (10,150)
+
+green_hue_min = 46
+green_saturation_min = 102 
+green_value_min = 43 
+green_hsv_min=np.array([green_hue_min,green_saturation_min,green_value_min])
+
+green_hue_max = 82
+green_saturation_max = 256 
+green_value_max = 199
+green_hsv_max=np.array([green_hue_max,green_saturation_max,green_value_max])
+
+mm.append(MM.M_and_M(color_id, "Green",greenCircleColor, green_hsv_min,green_hsv_max, greenTextLocation))  # Create Red Tracking Object
+
+##########
 # Create video camera object and start streaming to it.
+##########
 cap = cv2.VideoCapture(0) # 0 == Continuous stream
 
 
 # set up visual imaging for the trigger line that is the count line when crossed
 cnt_down=0
+y_trigger=160
 trigger_line_color=(255,0,0)
-trigger_line= np.array([[0, 160],[320, 160]])
+trigger_line= np.array([[0, y_trigger],[320, y_trigger]])
 
 counter=0
 
+# Debug variables used to see how long it takes to process a frame.
+millis1=0
+millis2=0
+
+##########
+# Begin the count loop that reads/processes one frame at a time
+##########
 try:
     while(cap.isOpened()):
         # Capture a still image from the video stream
         ret, frame = cap.read() #read a frame
     
+        #Debug code to gauge loop timing
+        '''
+        if millis1 != 0: 
+            millis2 = millis1
+            millis1 = int(round(time.time() * 1000))
+        else:
+            millis1 = int(round(time.time() * 1000))
+        millis = millis1-millis2
+        print "MiliSeconds per processing frame: ", millis
+
         frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)
         #frame = imutils.resize(frame, width=min(640, frame.shape[1]))
-        
+        '''
+
         ###############
         # Blur - HSV - Mask - erode - dilate
         ###############
@@ -92,116 +202,91 @@ try:
         # Convert image to HSV
         hsvframe = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     
-        # Set up the min and max HSV settings 
-        mask=cv2.inRange(hsvframe, mm[0].getHSV_min(), mm[0].getHSV_max())  # Red Mask
-        # Get rid of noise
-        mask = cv2.erode(mask, None, iterations=1)
-        mask = cv2.dilate(mask, None, iterations=3)
+        ##########
+        # Loop on each color
+        ##########
+        for mmColor in mm:
 
-        # Only return the contours parameter and ignore hierarchy, hence [-2]    
-        # CHAIN_APPROX_SIMPLE to return less contour points
-        contours0 = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2]
+            # Set up the min and max HSV settings 
+            mask=cv2.inRange(hsvframe, mmColor.getHSV_min(), mmColor.getHSV_max())  # Red Mask
+            # Get rid of noise
+            mask = cv2.erode(mask, None, iterations=1)
+            mask = cv2.dilate(mask, None, iterations=3)
     
-
-       	# Find the largest contour in the mask image, then use
-        # it to compute the radius used for circle()
-        c = max(contours0, key=cv2.contourArea)
-        ((x, y), radius) = cv2.minEnclosingCircle(c)
-
-        #Iterate through the objects found
-        for cnt in contours0:
-
-                # Find center of current object
-        	M = cv2.moments(cnt)
-        	center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+            # Only return the contours parameter and ignore hierarchy parm, hence [-2]    
+            # CHAIN_APPROX_SIMPLE to return less contour points (faster/less memory)
+            contours0 = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2]
         
-                #print (radius)
-        	# only proceed if the radius meets a minimum size
-        	if radius > min_radius:
-                    #print "DEBUG: radius meets minimum size"
+            # Find the largest contour in the mask image, then use
+            # it to compute the radius used for circle()
+            # Design note: Radius could be hard coded and this step skipped for performance 
+            # reasons if needed.
+            #radius = 13    # Hard code radius
+            if len(contours0) != 0:
+                c = max(contours0, key=cv2.contourArea)
+                if c.all() == 0:
+                    print "Warning Contours: ",contours0
+                else:
+                    ((x, y), radius) = cv2.minEnclosingCircle(c)
+            #else:
+                #print "Warning: Contour Area empty sequence"
 
-        	    # draw a circle around the centroid of the detected object
-                    # in the original RGB frame.  Not the HSV masked frame.
-                    # parameters (image, center, radius, color, thickness)
-        	    cv2.circle(frame, center, int(radius)+4, (0, 0, 255), 2)  #TODO: Make multiple colors
-
-                    # Update list of tracked points for this object
-                    mm[0].updateCoords(x, y)     #TODO: Figure out how to do for multiple objects
-
-                #TODO: Compare first and last coordinate to see if crossed trigger line
-                #TODO: If crossed, increment counter & mark object as "counted"
+            #Iterate through the objects found
+            for cnt in contours0:
     
-        """    
-        _, contours0, hierarchy = cv2.findContours(mask2,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)        
-        for cnt in contours0:
-            cv2.drawContours(frame, cnt, -1, (0,255,0), 3, 8)
-            area = cv2.contourArea(cnt)
-    
-                #################
-                # Assure object is still in the frame and isn't erased
-                #################     
-            for i in m_and_ms:   
-                i.updateDisappear(i.getDisappear()+1) 
-                if i.getDisappear() > 25:
-                    m_and_ms.remove(i)
+                    # Find center of current object
+            	M = cv2.moments(cnt)
+            	center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
             
-            if area > areaTH:
-                #################
-                #   Object Tracking
-                #################            
-                M = cv2.moments(cnt)
-                cx = int(M['m10']/M['m00'])
-                cy = int(M['m01']/M['m00'])
-                x,y,w,h = cv2.boundingRect(cnt)
+                    #print (radius)
+            	# only proceed if the radius meets a minimum size
+            	if radius > min_radius:
+                    #print "DEBUG: radius meets minimum size"
     
-                print('x{} y{} w{} h{}'.format( x, y, w, h))
-    
-                
-                new = True                 
-                for i in m_and_ms:
-                    if abs(x-i.getX()) <= w_margin and abs(y-i.getY()) <= h_margin:
-                        new = False
-                        i.updateCoords(cx,cy)  
-                        i.updateDisappear(0) # Clear
-                        break
-                if new == True:
-                    m = MM.M_and_M(color_id,cx,cy, max_p_age)
-                    m_and_ms.append(m)
-                    color_id += 1    
-     
-                cv2.circle(frame,(cx,cy), 5, (0,0,255), -1)
-                img = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)            
-                cv2.drawContours(frame, cnt, -1, (0,255,0), 3)
-                cv2.imshow('img',img)
-    
-        #########################
-        # Determine path/location of each m&m
-        #########################
-        for i in m_and_ms:
-            if len(i.getTracks()) >= 2:
-                pts = np.array(i.getTracks(), np.int32)
-                pts = pts.reshape((-1,1,2))
-                frame = cv2.polylines(frame,[pts],False,i.getRGB())
-                if i.cross_trigger_line(trigger_line) = True:
-                    cnt_down+=1
-                    print('Timestamp: {:%H:%M:%S} DOWN {}'.format(datetime.datetime.now(), cnt_down))
-    
-            cv2.putText(frame, str(i.getId()),(i.getX(),i.getY()),font,0.7,i.getRGB(),1,cv2.LINE_AA)
-        """
+            	    # draw a circle around the centroid of the detected object
+                        # in the original RGB frame.  Not the HSV masked frame.
+                        # parameters (image, center, radius, color, thickness)
+            	    cv2.circle(frame, center, int(radius)+4, mmColor.getCircleColor(), 2) 
+                    x, y = center
 
-        #########################
-        # overlay the trigger line and count onto image.
-        #########################
-        str_down='DOWN: '+ str(cnt_down)    #TODO: Change from 'DOWN' to 'Color', like "Red" from class M_and_M class object
-        frame = cv2.polylines( frame, [trigger_line], False, trigger_line_color,thickness=4)
-        cv2.putText(frame, str_down, (10,50), font, .5, (0,0,255), 2,cv2.LINE_AA) 
+                    print "DEBUG: Color, Center(x,y) = ", mmColor.getColor(), center 
+
+
+                    #import pdb; pdb.set_trace() # Begin debug
+
+                    ##########
+                    # See if a new object has dropped in or if it's pre-existing
+                    ##########
+                    if mmColor.newObjectCheck(x,y) == False:
+                        mmColor.addNewObject(x,y)
+                    else:  
+                        if mmColor.triggerCheck(x,y,y_trigger) == True:
+                            mmColor.incrementCount()
+
+        
+            # Save the mask for post processing display 
+            locals()["Mask"+mmColor.color]=mask    
     
+
+        ##########
         # Display the images
-        cv2.imshow('Masked image',mask)
+        ##########
+        # overlay the trigger line and count onto original image.
+        frame = cv2.polylines(frame, [trigger_line], False, trigger_line_color,thickness=4)
+    
+        for mmColor in mm:
+            #temp_mask=(locals()["Mask"+mmColor.color])
+
+            str_down='DOWN: '+ str(cnt_down)    #TODO: Change from 'DOWN' to 'Color', like "Red" from class M_and_M class object
+            cv2.putText(frame, str_down, mmColor.getTextLocation(), font, .5, mmColor.getCircleColor(), 2,cv2.LINE_AA) 
+            #cv2.imshow(mmColor.color+' Masked image',temp_mask)
+
         cv2.imshow('Frame',frame)
     
         
+        ##########
         #Abort and exit with 'Q' or ESC
+        ##########
         k = cv2.waitKey(30) & 0xff
         if k == 27:
             break
