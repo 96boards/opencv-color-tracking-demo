@@ -31,10 +31,13 @@ import time
 
 
 class M_and_M:
-    track = []
-    trigger_cnt = 0
+    # Keeps track of individual mm's that are in the view as MM_Objects.
+    trackPrevious = []    
+    trackNext = []   
+
     objectID = 0
-    max_distance = 100   # Max pixels to assure it's the same mm object since last pass.
+    max_distance = 300   # Max pixels to assure it's not the same mm object since last pass.
+    min_valid_yCoordinate = 200
 
     class MM_Object:
         age=0
@@ -92,6 +95,7 @@ class M_and_M:
         return(self.hsv_max)
 
     def getColorID(self):
+
         return(self.uid)
 
     def getColor(self):
@@ -106,24 +110,68 @@ class M_and_M:
     def incrementCount(self):
         self.count +=1
 
+    def getCount(self):
+        return(self.count)
+
     ##########
     # Functions to discover, track, and manage found mm's.
     ##########
-    def newObjectCheck(self, xn, yn):
-        print "Debug: Enter newObjectCheck. x,y= ", xn, yn
-        for i in self.track:
-            print "Debug: newObjectCheck yn, i.getY() =", yn, i.getY()
-            # If not triggered and not within max_distance pixels then assume new mm.
-            if i.getTriggerState() == False and abs(yn-i.getY()) > self.max_distance:
-                return True    
-            else:    # Update existing mm object
-                i.updateNewCoords(xn,yn) 
-                return False
-        return True
+    def rstTrackNext(self):
+        self.trackNext = []   
+
+    def addTrackNext(self, xn, yn):
+        self.trackNext.append(M_and_M.MM_Object(xn,yn))
+        
+    def newObjectCheck(self):
+        print "Debug: Enter newObjectCheck"
+
+        # Clean up self.trackPrevious before checking for advanced existing object
+        for i in self.trackPrevious:
+            print "Debug: newObjectCheck.trackPrevious"
+            x=i.getX()
+            y=i.getY()
+            #Assume that object has rolled out of screen if below min_valid_yCoordinate
+            if y > self.min_valid_yCoordinate or i.getTriggerState() == True:
+                self.trackPrevious.remove(i)
+
+        if not self.trackPrevious:
+            print "Debug: newObjectCheck. No old mm's, add all as new"
+            # Add all objects in TrackNext as new mm objects
+            for t in self.trackNext:
+                self.addNewObject(t.getX(),t.getY())
+        else:
+            ##########
+            # Now ready to run algorithm to check whether object is a new one or previous one that moved.
+            ##########
+            # First sort the two object arrays ascending by y to make the following steps easier
+            self.trackNext.sort(key = lambda a: a.y)
+            self.trackPrevious.sort(key = lambda a: a.y)
+
+            for tPrev in self.trackPrevious:
+                print "Debug: newObjectCheck tPrev x, y =", tPrev.getX(), tPrev.getY() 
+                yp=tPrev.getY()
+
+                for tNext in self.trackNext:
+                    yn = tNext.getY()
+
+                    # If not within max_distance pixels then assume new mm.
+                    if yn-yp > self.max_distance: 
+                        # See if below trigger count line
+                        if tNext.getY() > self.min_valid_yCoordinate:
+                            if tNext.getTriggerState() == False:
+                                self.incrementCount()
+                                tNext.setTrigger()
+                        self.addNewObject(tNext.getX(),tNext.getY())
+                    else:  # Same mm new location
+                        tPrev = tNext
+                        if tPrev.getY() > self.min_valid_yCoordinate and tPrev.getTriggerState() == False:
+                            self.incrementCount()
+                            tPrev.setTrigger()
+                        
                     
     def addNewObject(self, xn, yn):
         print "Debug: Add new MM Object"
-        self.track.append(M_and_M.MM_Object(xn,yn))
+        self.trackPrevious.append(M_and_M.MM_Object(xn,yn))
 
     def appendNewCoords(self, mmObject,xn, yn):
         return
