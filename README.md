@@ -18,6 +18,7 @@ Once the above is done for all colors, edit the track_mm.py file and update the 
 Finally, run the track_mm.py file and watch the counters increment as the associated colors roll through the screen.
 
 ## Other notes
+
 Additional tuning is likely required tied to the test environment and how fast color objects are flowing through the field of view.  These include the following:
 - 
 
