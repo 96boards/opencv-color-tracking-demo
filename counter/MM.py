@@ -1,6 +1,5 @@
 """
-Summary: 
-
+Summary: This file contains the classes allocated for each color and each object per color.  One M_and_M object is created per color that is to be tracked. 
 
 
 Copyright 2018 Don Harbin

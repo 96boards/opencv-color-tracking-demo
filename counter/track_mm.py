@@ -1,6 +1,5 @@
 """
-Summary: 
-
+Summary: This Python program uses OpenCV to isolate colors and then track colored object going in a singular direction and counting the number of objects that.   It is focused on using Peanut M&M's as a baseline, but could be easily modified for varying objects and varying colors.   This program requires tuning.  Please see the associated instructions on my github for more details.  
 
 
 Copyright 2018 Don Harbin
@@ -258,7 +257,6 @@ try:
                     mmColor.addTrackNext(x,y)    # Used to post process multiple mm objects in next steps
         
             # Save the mask for post processing display 
-            #TODO: Remove following line???
             locals()["Mask"+mmColor.color]=mask    
 
             #import pdb; pdb.set_trace() # Begin debug
