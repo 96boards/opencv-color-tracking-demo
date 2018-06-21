@@ -11,6 +11,9 @@ Installation of python, OpenCV and PIP install of several python libraries are a
 Camera:  I have initially used a USB camera but plan to transition to a camera mezzanine connected to the DB820c
 Lighting: It is important to create a setup where lighting is controlled and repeatable.  This is so that when you determine your HSV settings, they are repeatable.  
 
+Example of physical setup is shown below.  It can be seen that a PVC pipe was cut to allow a camera to see the objects as they flow by.  It was set up on a 10 degree incline.
+![alt text](photos/mmSetupPart.jpg "Setup components")
+
 # Demo usage flow
 There are a few steps to perform in order to get the demo set up for your physical environmnet.  
 
@@ -31,7 +34,8 @@ Finally, run the track_mm.py file and watch the counters increment as the associ
 `python track_mm.py 2> /dev/null`
 
 The default configuration will display all six color masks as well as the frame image.  These look like the following:
-
+![alt text](photos/Frame.jpg "Frame image")
+![alt text](photos/BlueMask.jpg "Blue Mask")
 
 # Debugging and tuning
  * If you start the app and it quietly closes, make sure your camera is connected
