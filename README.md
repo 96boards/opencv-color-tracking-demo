@@ -19,7 +19,7 @@ First, you must discover the HSV min and max values for your test environment.  
 `$python colorisolationapp.py`
 
 An example of this tool is shown below: 
-![alt text](photos/colorisolationapp.jpg "HSV Tuning App")
+![alt text](photos/colorisolationapp.png "HSV Tuning App")
 
 The field of view should contain your targeted environment along with all of the colors you wish to isolate from each other.  With the sliders in the colorIsolationApp.py, move them until only the color of interest can be seen and all other colors are blocked (black).  Press "Show" and the HSV min and max values will be printed to the terminal window.  
 
