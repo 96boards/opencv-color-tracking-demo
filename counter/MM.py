@@ -43,8 +43,8 @@ class M_and_M:
     #   3) the more predictable the speeds of the objects, the better. Turns out Peanut M&Ms have quite a 
     #      variant in shapes that impact consitant velocity/acceleration.
     max_distance = 300   # Max pixels to assure it's not the same mm object since last pass.
-    min_distance = 100   # Min
-    min_valid_yCoordinate = 40     # if below 100, assume will survive next pass
+    min_distance = 40    # Min
+    min_valid_yCoordinate = 30     # if below 100, assume will survive next pass
     max_valid_yCoordinate = 300    # if abov 300, assume it's gone
 
     ##########
@@ -155,10 +155,11 @@ class M_and_M:
         for i in self.trackPrevious:
             x=i.getX()
             y=i.getY()
-            print "Debug: newObjectCheck.trackPrevious y age ", y, i.getAge()
+            age=i.getAge()
+            print "Debug: newObjectCheck.trackPrevious y age ", y, age
 
             # Assume that object has rolled out of screen very quickly and never got logged 
-            if i.getAge() > self.age_threshold:
+            if age > self.age_threshold:
                 if i.getTriggerState() == False:
                     print "Debug: Aged out INCREMENT COUNT"
                     self.incrementCount()
@@ -186,19 +187,21 @@ class M_and_M:
             self.trackPrevious.sort(key = lambda a: a.y)
 
             for tPrev in self.trackPrevious:
-                print "Debug: newObjectCheck tPrev x, y =", tPrev.getX(), tPrev.getY() 
                 yp=tPrev.getY()
+                xp=tPrev.getX()
+                print "Debug: newObjectCheck tPrev x, y =", xp, yp
 
                 for tNext in self.trackNext:
                     print "Debug: newObjectCheck tPrev y, tNext y =", yp, tNext.getY() 
                     yn = tNext.getY()
 
                     # If not within valid band, assume new mm.
-                    if yn > yp and abs(yn-yp) > self.max_distance and abs(yn-yp) < self.min_distance: 
+                    if yn > yp and (abs(yn-yp) > self.max_distance or abs(yn-yp) < self.min_distance): 
                         # See if below trigger count line
-                        print "Debug: newObjectCheck max distance exceeded"
+                        print "Debug: newObjectCheck valid range exceeded - new"
                         if tNext.getY() > self.min_valid_yCoordinate:
                             if tNext.getTriggerState() == False:
+                                print "Debug: newObjectCheck INCREMENT COUNT max"
                                 self.incrementCount()
                                 tNext.setTrigger()
 
@@ -207,19 +210,20 @@ class M_and_M:
                     else:  # Same mm new location
                         print "Debug: newObjectCheck new location"
 
-                        # import pdb; pdb.set_trace()
-                        tPrev.setX(tNext.getX())
-                        tPrev.setY(tNext.getY())
-                        if tPrev.getTriggerState() == False:
-                            tPrev.setTriggerState(tNext.getTriggerState())
-                        tPrev.setAge(0)
+                        if yn > yp:
+                            # import pdb; pdb.set_trace()
+                            tPrev.setX(tNext.getX())
+                            tPrev.setY(tNext.getY())
+                            if tPrev.getTriggerState() == False:
+                                tPrev.setTriggerState(tNext.getTriggerState())
+                            tPrev.setAge(0)
         
-                        self.trackNext.remove(tNext)
+                            self.trackNext.remove(tNext)
 
-                        if tPrev.getY() > self.min_valid_yCoordinate and tPrev.getTriggerState() == False:
-                            print "Debug: newObjectCheck INCREMENT COUNT"
-                            self.incrementCount()
-                            tPrev.setTrigger()
+                            if tPrev.getY() > self.min_valid_yCoordinate and tPrev.getTriggerState() == False:
+                                print "Debug: newObjectCheck INCREMENT COUNT moved"
+                                self.incrementCount()
+                                tPrev.setTrigger()
                         break    # Consumed the tPrev object here so go grab a new one
 
             # Check for remaining new objects seen, process each one, and move to trackPrevious[]
