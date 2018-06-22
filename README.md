@@ -15,7 +15,7 @@ Example of physical setup components is shown below.  It can be seen that a PVC 
 
 <img src=photos/DemoSetup.jpg width=40% height=50% />
 
-Also a small light is important to control the lighting.  Initial prototype was just a shoebox spray painted white on the inside. 
+Also a small light is important to control the lighting.  Initial prototype was just a shoebox spray painted white on the inside. A hole was cut in top for light and camera placement. 
 
 # Demo usage flow
 There are a few steps to perform in order to get the demo set up for your physical environmnet.  
