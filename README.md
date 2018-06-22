@@ -12,8 +12,7 @@ Camera:  I have initially used a USB camera but plan to transition to a camera m
 Lighting: It is important to create a setup where lighting is controlled and repeatable.  This is so that when you determine your HSV settings, they are repeatable.  
 
 Example of physical setup is shown below.  It can be seen that a PVC pipe was cut to allow a camera to see the objects as they flow by.  It was set up on a 10 degree incline.
-![Test image](photos/DemoSetup.jpg "Setup components")
-<img src=photos/DemoSetup.jpg width=300 height=400 />
+<img src=photos/DemoSetup.jpg width=40% height=40% />
 
 
 # Demo usage flow
