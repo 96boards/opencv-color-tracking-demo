@@ -11,9 +11,11 @@ Installation of python, OpenCV and PIP install of several python libraries are a
 Camera:  I have initially used a USB camera but plan to transition to a camera mezzanine connected to the DB820c
 Lighting: It is important to create a setup where lighting is controlled and repeatable.  This is so that when you determine your HSV settings, they are repeatable.  
 
-Example of physical setup is shown below.  It can be seen that a PVC pipe was cut to allow a camera to see the objects as they flow by.  It was set up on a 10 degree incline.
+Example of physical setup components is shown below.  It can be seen that a PVC pipe was cut to allow a camera to see the objects as they flow by.  It was set up on a 10 degree incline.
+
 <img src=photos/DemoSetup.jpg width=40% height=40% />
 
+Also a small light is important to control the lighting.  Initial prototype was just a shoebox spray painted white on the inside. 
 
 # Demo usage flow
 There are a few steps to perform in order to get the demo set up for your physical environmnet.  
