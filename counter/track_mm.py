@@ -44,7 +44,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 # Tuning parameters
 mm = []
 max_age = 4            # a mm object only lives through max_age passes
-min_radius = 12        # Adjust to size of m & m. Impacted by distance from camera
+min_radius = 11        # Adjust to size of m & m. Impacted by distance from camera
 
 #DEBUG import pdb; pdb.set_trace() # Begin debug
 
@@ -206,13 +206,13 @@ try:
         # Loop on each color
         ##########
         for mmColor in mm:
-            print "Debug: ",mmColor.getColor()
+            #print "Debug: ",mmColor.getColor()
 
             # Set up the min and max HSV settings 
             mask=cv2.inRange(hsvframe, mmColor.getHSV_min(), mmColor.getHSV_max())  # Red Mask
             # Get rid of noise
-            mask = cv2.erode(mask, kernel5, iterations=1)
-            mask = cv2.dilate(mask, kernel5, iterations=3)
+            mask = cv2.erode(mask, kernel7, iterations=1)
+            mask = cv2.dilate(mask, kernel7, iterations=3)
     
             # Only return the contours parameter and ignore hierarchy parm, hence [-2]    
             # CHAIN_APPROX_SIMPLE to return less contour points (faster/less memory)
