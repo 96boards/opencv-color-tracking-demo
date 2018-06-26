@@ -4,10 +4,12 @@ This demo is based and tested on the DragonBoard 820c, but should be able to wor
 ### Setup
 This demo uses Debian builds of the Dragonboard 820c from Linaro. These can currently be found [here](http://snapshots.linaro.org/96boards/dragonboard820c/linaro/debian/ "820c Snapshots"). Build 182 was used for initial development and testing.
 
-Installation of python, OpenCV and PIP install of several python libraries are also required.  There are plenty of sites that describe how to set this up.
- * Instructions for installing OpenCV found here
- 
-
+Installation of python, OpenCV and PIP install of several python libraries are also required. Starting point documentation for this can be found at the sites below:
+ * [OpenCV build instructions](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
+ * [96Boards Blog description](https://www.96boards.org/blog/part-2-home-surveillance-project-96boards/) Note: DB820c has enough RAM to allow the user to skip the steps that create swap space.
+ * [96Boards Forum entry](https://discuss.96boards.org/t/opencv-3-2-install-dependencies-error/2139/2)
+  
+**Required Hardware:**
 Camera:  I have initially used a USB camera but plan to transition to a camera mezzanine connected to the DB820c
 Lighting: It is important to create a setup where lighting is controlled and repeatable.  This is so that when you determine your HSV settings, they are repeatable.  
 
