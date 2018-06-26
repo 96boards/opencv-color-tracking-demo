@@ -33,7 +33,7 @@ An example of this tool is shown below:
 
 The field of view should contain your targeted environment along with all of the colors you wish to isolate from each other.  With the sliders in the colorIsolationApp.py, move them until only the color of interest can be seen and all other colors are blocked (black).  Press "Show" and the HSV min and max values will be printed to the terminal window.  Save these values for the next step.
 
-Once the above is done for all colors, edit the track_mm.py file and update the HSV values in the initialization section to match the values from the above step.  Save the file and you should be ready to go.
+Once the above is done for all colors, edit the `track_mm.py` file and update the HSV values in the initialization section for each color to match the values from the above step.  Save the file and you should be ready to go.
 
 ## Run the Demo
 
@@ -57,7 +57,24 @@ The default configuration will display all six color masks as well as the frame 
         millis = millis1-millis2
         print "MiliSeconds per processing frame: ", millis
  ```
- 
+## Customizing the tracking algorithm
+There are surely many creative algorithms to track and count the objects as they move the field of view.  The primary routine that does this in the `def newObjectCheck(self):` method in the `MM.py` file.  Since the objects can move at variable speeds, stitching the objects across frames will have corner cases where it is challenging to determine if the object is new or a previously existing object that has moved. If you come up with one, please let me know!  I would love to see other creative ways to solve this while increasing accuracy.
+
+## Customizing the OpenCV filters
+In the initial implementation, I have primarily used the following code in `track_mm.py` to clean up the colored objects moving through the frame:
+```
+            # Set up the min and max HSV settings 
+            mask=cv2.inRange(hsvframe, mmColor.getHSV_min(), mmColor.getHSV_max())  # Red Mask
+            # Get rid of noise
+            mask = cv2.erode(mask, kernel7, iterations=1)
+            mask = cv2.dilate(mask, kernel7, iterations=3)
+    
+            # Only return the contours parameter and ignore hierarchy parm, hence [-2]    
+            # CHAIN_APPROX_SIMPLE to return less contour points (faster/less memory)
+            contours0 = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2]
+```
+Various kernel sizes and erode/dialate functions from OpenCV are encouraged to be experimented with, with the goal of decreasing the time taken to process each frame.  Current implementation is around 65-70mS per frame.  The faster each frame is processed, the tracking algorithm can then be tightened up for more accurate tracking.  I would also be interested in seeing and testing creative solutions that can decrease this loop time.  A faster and more expensive camera could a quick way to increase accuracy.  I started out with a simple off-the-shelf USB camera that's only 30 fps.  
+
 # Other notes
 
 Additional tuning is likely required tied to the test environment and how fast color objects are flowing through the field of view.  These include the following:
