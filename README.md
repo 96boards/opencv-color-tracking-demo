@@ -73,7 +73,7 @@ In the initial implementation, I have primarily used the following code in `trac
             # CHAIN_APPROX_SIMPLE to return less contour points (faster/less memory)
             contours0 = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2]
 ```
-Various kernel sizes and erode/dialate functions from OpenCV are encouraged to be experimented with, with the goal of decreasing the time taken to process each frame.  Current implementation is around 65-70mS per frame.  The faster each frame is processed, the tracking algorithm can then be tightened up for more accurate tracking.  I would also be interested in seeing and testing creative solutions that can decrease this loop time.  A faster and more expensive camera could a quick way to increase accuracy.  I started out with a simple off-the-shelf USB camera that's only 30 fps.  
+Various kernel sizes and erode/dialate functions from OpenCV are encouraged to be experimented with, with the goal of decreasing the time taken to process each frame.  Current implementation is around 65-70mS per frame.  The faster each frame is processed, the tracking algorithm can then be tightened up for more accurate tracking.  I would also be interested in seeing and testing creative solutions that can decrease this loop time.  A faster and more expensive camera could a quick way to increase accuracy.  I started out with a simple off-the-shelf USB camera that's only 30 fps.  Another option is to redesign and create a multi-threading solution that captures frames in parallel to the frame processing.
 
 # Other notes
 
