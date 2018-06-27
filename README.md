@@ -18,7 +18,7 @@ Lighting: It is important to create a setup where lighting is controlled and rep
 Example of physical setup components is shown below.  It can be seen that a PVC pipe was cut to allow a camera to see the objects as they flow by.  It was set up on a 10 degree incline.
 
 <img src=photos/DemoSetup.jpg width=40% height=50% />
-<img src=photos/SetupSideView.jpg width=40% height=50% />
+<img src=photos/SetupSideView.gif width=40% height=50% />
 <img src=photos/SetupTopViewV2.gif width=50% height=50%/>
 
 
