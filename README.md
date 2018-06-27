@@ -19,7 +19,7 @@ Example of physical setup components is shown below.  It can be seen that a PVC 
 
 <img src=photos/DemoSetup.jpg width=40% height=50% />
 <img src=photos/SetupSideView.jpg width=40% height=50% />
-<img src=photos/SetupTopViewV2.jpg width=40% height=50% />
+<img src=photos/SetupTopViewV2.jpg />
 
 
 Also a small light is important to control the lighting.  Initial prototype was just a shoebox spray painted white on the inside. A hole was cut in top for light and camera placement. 
