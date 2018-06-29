@@ -22,11 +22,13 @@ DEALINGS IN THE SOFTWARE.
 
 
 """
+from __future__ import division
 import numpy as np
 import cv2
 import MM
 import time
 import imutils
+from imutils.video import WebcamVideoStream
 import time
 
 # Used to tune morphologicals
@@ -158,8 +160,9 @@ mm.append(MM.M_and_M(color_id, "Green", max_age, greenCircleColor, green_hsv_min
 ##########
 # Create video camera object and start streaming to it.
 ##########
-cap = cv2.VideoCapture(0) # 0 == Continuous stream
-
+#cap = cv2.VideoCapture(0) # NONTHREAD 0 == Continuous stream
+capvs = WebcamVideoStream(src=0)  # THREAD Create video capture in separte thread
+capvs.start()
 
 # set up visual imaging for the trigger line that is the count line when crossed
 cnt_down=0
@@ -172,16 +175,19 @@ counter=0
 # Debug variables used to see how long it takes to process a frame.
 millis1=0
 millis2=0
+milli_total=0
+fps_count = 1
 
 ##########
 # Begin the count loop that reads/processes one frame at a time
 ##########
 try:
-    while(cap.isOpened()):
+    #while(cap.isOpened()): # NONTHREAD
+    while(True):    # THREAD
         # Capture a still image from the video stream
-        ret, frame = cap.read() #read a frame
-        
-        """ 
+        #ret, frame = cap.read() # NONTHREAD read a frame
+        frame=capvs.read()    # THREAD
+
         #Debug code to gauge loop timing
         if millis1 != 0: 
             millis2 = millis1
@@ -189,10 +195,19 @@ try:
         else:
             millis1 = int(round(time.time() * 1000))
         millis = millis1-millis2
-        print "MiliSeconds per processing frame: ", millis
-        """
+        #print "MilliSeconds per processing frame: ", millis
+
+        if fps_count > 49:
+            fps=float(1.0/(milli_total/50.0))
+            print "Average FPS = ", round((fps*1000),2)
+            fps_count = 1
+            milli_total=0
+        else:
+            milli_total += millis
+            fps_count += 1
+        #Debug <end>
+
         frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)
-        #frame = imutils.resize(frame, width=min(640, frame.shape[1]))
 
         ###############
         # Blur - HSV - Mask - erode - dilate
