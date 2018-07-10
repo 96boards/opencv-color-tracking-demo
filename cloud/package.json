@@ -1,0 +1,7 @@
+{
+  "name": "Demo-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "chart.js": "^2.7.2"
+  }
+}
