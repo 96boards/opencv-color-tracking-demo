@@ -26,10 +26,10 @@ from __future__ import division
 import numpy as np
 import cv2
 import MM
+from file_utility import writeCount
 import time
 import imutils
 from imutils.video import WebcamVideoStream
-import time
 
 # Used to tune morphologicals
 kernel3 = np.ones((3,3),np.uint8)
@@ -87,7 +87,7 @@ blue_saturation_max = 251
 blue_value_max = 167
 blue_hsv_max=np.array([blue_hue_max,blue_saturation_max,blue_value_max])
 
-mm.append(MM.M_and_M(color_id, "Blue", max_age, blueCircleColor, blue_hsv_min,blue_hsv_max,blueTextLocation))  # Create Red Tracking Object
+mm.append(MM.M_and_M(color_id, "Blue", max_age, blueCircleColor, blue_hsv_min,blue_hsv_max,blueTextLocation))  # Create Blue Tracking Object
 
 # ORANGE
 color_id += 1
@@ -104,7 +104,7 @@ orange_saturation_max = 256
 orange_value_max = 185
 orange_hsv_max=np.array([orange_hue_max,orange_saturation_max,orange_value_max])
 
-mm.append(MM.M_and_M(color_id, "Orange", max_age, orangeCircleColor, orange_hsv_min,orange_hsv_max,orangeTextLocation))  # Create Red Tracking Object
+mm.append(MM.M_and_M(color_id, "Orange", max_age, orangeCircleColor, orange_hsv_min,orange_hsv_max,orangeTextLocation))  # Create Orange Tracking Object
 
 # YELLOW
 color_id += 1
@@ -121,7 +121,7 @@ yellow_saturation_max = 256
 yellow_value_max = 192
 yellow_hsv_max=np.array([yellow_hue_max,yellow_saturation_max,yellow_value_max])
 
-mm.append(MM.M_and_M(color_id, "Yellow", max_age, yellowCircleColor, yellow_hsv_min,yellow_hsv_max,yellowTextLocation))  # Create Red Tracking Object
+mm.append(MM.M_and_M(color_id, "Yellow", max_age, yellowCircleColor, yellow_hsv_min,yellow_hsv_max,yellowTextLocation))  # Create Yellow Tracking Object
 
 # BLACK
 color_id += 1
@@ -138,7 +138,7 @@ black_saturation_max = 187
 black_value_max = 39
 black_hsv_max=np.array([black_hue_max,black_saturation_max,black_value_max])
 
-mm.append(MM.M_and_M(color_id, "Black", max_age, blackCircleColor, black_hsv_min,black_hsv_max,blackTextLocation))  # Create Red Tracking Object
+mm.append(MM.M_and_M(color_id, "Black", max_age, blackCircleColor, black_hsv_min,black_hsv_max,blackTextLocation))  # Create Black Tracking Object
 
 # GREEN
 color_id += 1
@@ -155,7 +155,7 @@ green_saturation_max = 177
 green_value_max = 174
 green_hsv_max=np.array([green_hue_max,green_saturation_max,green_value_max])
 
-mm.append(MM.M_and_M(color_id, "Green", max_age, greenCircleColor, green_hsv_min,green_hsv_max, greenTextLocation))  # Create Red Tracking Object
+mm.append(MM.M_and_M(color_id, "Green", max_age, greenCircleColor, green_hsv_min,green_hsv_max, greenTextLocation))  # Create Green Tracking Object
 
 ##########
 # Create video camera object and start streaming to it.
@@ -177,6 +177,8 @@ millis1=0
 millis2=0
 milli_total=0
 fps_count = 1
+
+
 
 ##########
 # Begin the count loop that reads/processes one frame at a time
@@ -202,6 +204,12 @@ try:
             print "Average FPS = ", round((fps*1000),2)
             fps_count = 1
             milli_total=0
+
+            # Write counters from each color to file for Charting Web Page Use.
+            count_string=[]
+            for mmColor in mm:
+                count_string.append(mmColor.getCount())
+            writeCount("countTotal.txt",count_string)
         else:
             milli_total += millis
             fps_count += 1
