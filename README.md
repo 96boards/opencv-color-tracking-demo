@@ -1,12 +1,113 @@
 # OpenCV Color Tracking Demo 
-This demo is based and tested on the DragonBoard 820c, but should be able to work on varying platforms.  In summary, it counts  objects by color passing in the same direction through the camera field of view.  It can count multiple objects simultaneously.
+This demo is based and tested on the DragonBoard 820c, but should be able to work on varying platforms.  In summary, it counts  objects by color passing in the same direction through the camera field of view.  It can count multiple objects simultaneously.  The OpenCV functionality leveraged by this demo includes the following:
+  * Object segmentation using color
+  * Valid object identification by size  
+  * Frame stitching to track and count multiple simultaneous moving objects by color
+  * Provides hooks to monitor performance when algorithm changes to OpenCV library calls are made for identification tuning
+  * Provides hooks to export results to the cloud
 
 ### Setup
-This demo uses Debian builds of the Dragonboard 820c from Linaro. These can currently be found [here](http://snapshots.linaro.org/96boards/dragonboard820c/linaro/debian/ "820c Snapshots"). Build 182 was used for initial development and testing.
+This demo uses Debian builds of the Dragonboard 820c from Linaro. These can currently be found [here](http://snapshots.linaro.org/96boards/dragonboard820c/linaro/debian/ "820c Snapshots"). Build 182 was used for initial development and testing. 
+A follow-on install using Debian Build 222 for The Boot Image and Root File System and Bootloader Build 37 was performed to validate the installation exmaple instuctions below.
 
-Installation of python, OpenCV and PIP install of several python libraries are also required. Starting point documentation for this can be found at the sites below:
+**Software Installation Example**
+1. Install the base software following the instructions on 96boards.org for DB820c.
+* It's recommended to use latest builds and to also install the latest bootloader.
+* **Important:** Don't forget to install the proprietary firmware found in *linux-board-support-package-r01700.zip*!  The demo won't work without it.  This zip contains a sub-folder called *proprietary-linux*.  Once you have attained this file, copy all the files from this sub-folder into the */lib/firmware* directory of the DB820c that you have just installed your Debian build on.
+
+**Warning** This example requires building OpenCV from source.  This build on the DB820c (herein called the Target) requires a lot of board resources.  It's recommended to ssh into the Target and to have no applications, browsers or windows of any kind open during this installation process.  Build failures were experienced when Chromium was open, and these went away when did from a remote terminal.
+
+**Note:** All commands in this section are executed on the Target from a ssh terminal window on the development host using `ssh linaro@<IP address of the Target>`.
+
+2. Prep for sofware installation
+  ```
+  sudo apt-get -y update
+  sudo apt-get -y upgrade
+  systemctl daemon-reload
+  ```
+3. Install base packages
+  ```
+  sudo apt-get install -y build-essential cmake pkg-config
+  sudo apt-get install -y libjpeg62-turbo-dev libtiff5-dev libpng-dev
+  ```
+4. Install Jasper - since there is no installation package, must build from source
+  ```
+  cd ~
+  mkdir jasper
+  cd jasper
+  wget http://www.ece.uvic.ca/~frodo/jasper/software/jasper-2.0.10.tar.gz
+  tar -vzxf jasper-2.0.10.tar.gz
+  cd jasper-2.0.10
+  mkdir BUILD
+  cd BUILD
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_SKIP_INSTALL_RPATH=YES -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/jasper-2.0.10 ..
+  makesudo make install
+  cd ~
+  ```
+5. Continue installing additional packages
+  ```
+  sudo apt-get install -y libdc1394-22-dev libavcodec-dev libavformat-dev libswscale-dev libtheora-dev libvorbis-dev libxvidcore-dev libx264-dev yasm libopencore-amrnb-dev libopencore-amrwb-dev libv4l-dev libxine2-dev
+  sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+  sudo apt-get install -y libxvidcore-dev libx264-dev
+  
+  sudo apt-get install -y libgtk-3-dev
+  sudo apt-get install -y libatlas-base-dev gfortran
+  
+  sudo apt-get install -y python2.7-dev
+  sudo apt-get install -y python3-dev
+  
+  sudo apt-get install -y python-pip
+  pip install numpy
+  pip install imutils
+  ```
+  
+6. Download, build and install OpenCV version 3.2.0 (update commands/directory names below if a different version is used)
+  ```
+  cd ~
+  wget -O opencv.zip https://github.com/Itseez/opencv/archive/3.2.0.zip
+  unzip opencv.zip
+  wget -O opencv_contrib.zip https://github.com/Itseez/opencv_contrib/archive/3.2.0.zip
+  unzip opencv_contrib.zip
+  
+  cd opencv3.2.0
+  mkdir build
+  cd build
+  cmake -D CMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-3.2.0/modules ..
+  ```
+  **Hack Note:** To get the OpenCV to build, I had to resolve a ffmpeg version incompatibility.  Instead of changing versions, run the following script from the command line to make the build work:
+  ```
+  sed -i '1s/^/#define AV_CODEC_FLAG_GLOBAL_HEADER (1 << 22)\n#define CODEC_FLAG_GLOBAL_HEADER AV_CODEC_FLAG_GLOBAL_HEADER\n#define AVFMT_RAWPICTURE 0x0020\n/' ~/opencv-3.2.0/modules/videoio/src/cap_ffmpeg_impl.hpp
+  ```
+  Now ready to build:
+  ```
+  make -j2
+  sudo make install
+  sudo ldconfig
+  ```
+7. The Python 2.7 bindings for OpenCV 3 should now be located in /usr/local/lib/python-2.7/site-packages/ . You can verify this using the ls command and having a similar output to the following:
+  ```
+  ls -l /usr/local/lib/python2.7/dist-packages/
+  total 2928
+  -rw-r--r-- 1 root staff 2994784 Aug  2 03:20 cv2.so
+  ```
+8. Verify that OpenCV 3.2 installed as expected
+  ```
+  linaro@linaro-alip:~/opencv-3.2.0/build$ python
+  Python 2.7.15 (default, Jul 28 2018, 11:29:29)
+  [GCC 8.1.0] on linux2
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> import cv2
+  >>> cv2.__version__
+      '3.2.0'
+  >>> quit()
+  ```
+  
+Installation is complete and you should be ready to run the demo now!
+  
+Useful installation references:
+ * [Ubuntu 16.04: How to install OpenCV](https://www.pyimagesearch.com/2016/10/24/ubuntu-16-04-how-to-install-opencv/)
  * [OpenCV build instructions](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
- * [96Boards Blog description](https://www.96boards.org/blog/part-2-home-surveillance-project-96boards/) Note: DB820c has enough RAM to allow the user to skip the steps that create swap space.
+ * [Installing OpenCV on Debian Linux](https://indranilsinharoy.com/2012/11/01/installing-opencv-on-linux/)
  * [96Boards Forum entry](https://discuss.96boards.org/t/opencv-3-2-install-dependencies-error/2139/2)
   
 **Required Hardware:**
@@ -21,8 +122,7 @@ Example of physical setup components is shown below.  It can be seen that a PVC 
 <img src=photos/SetupSideView.gif width=40% height=50% />
 <img src=photos/SetupTopViewV2.gif width=50% height=50%/>
 
-
-Also a small light is important to control the lighting.  Initial prototype was just a shoebox spray painted white on the inside. A hole was cut in top for light and camera placement. 
+A small light turned out to be important to control the lighting.  Initial prototype was just a shoebox spray painted white on the inside. A hole was cut in top for light and camera placement. 
 
 # Demo usage flow
 There are a few steps to perform in order to get the demo set up for your physical environmnet.  
