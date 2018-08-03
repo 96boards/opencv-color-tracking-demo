@@ -48,6 +48,8 @@ A follow-on install using Debian Build 222 for The Boot Image and Root File Syst
   ```
   sudo apt-get install -y libdc1394-22-dev libavcodec-dev libavformat-dev libswscale-dev libtheora-dev libvorbis-dev libxvidcore-dev libx264-dev yasm libopencore-amrnb-dev libopencore-amrwb-dev libv4l-dev libxine2-dev
   sudo apt-get install -y libgtk-3-dev libatlas-base-dev gfortran
+  sudo apt-get install -y libtbb-dev libeigen3-dev libcblas-dev libblas-dev
+  sudo apt-get install -y libgstreamer1.0-0 freeglut3-dev libglew-dev libglm-dev mesa-common-dev libvtk6-qt-dev python-vtk6 python3-dev
   
   sudo apt-get install -y python2.7-dev
   sudo apt-get install -y python3-dev
