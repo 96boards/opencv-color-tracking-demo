@@ -47,9 +47,7 @@ A follow-on install using Debian Build 222 for The Boot Image and Root File Syst
 5. Continue installing additional packages
   ```
   sudo apt-get install -y libdc1394-22-dev libavcodec-dev libavformat-dev libswscale-dev libtheora-dev libvorbis-dev libxvidcore-dev libx264-dev yasm libopencore-amrnb-dev libopencore-amrwb-dev libv4l-dev libxine2-dev
-  sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
-  sudo apt-get install -y libxvidcore-dev libx264-dev
-  
+  sudo apt-get install -y libxvidcore-dev libx264-dev  
   sudo apt-get install -y libgtk-3-dev
   sudo apt-get install -y libatlas-base-dev gfortran
   
