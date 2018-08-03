@@ -148,6 +148,7 @@ The default configuration will display all six color masks as well as the frame 
 ![alt text](photos/BlueMask.png "Blue Mask")
 
 # Debugging and tuning
+ * If the demo is not coming up, run the following so that you can see linux standard error output: `python track_mm.py`. The command format in the previous section to run the demo doesn't display standard error output.
  * If you start the app and it quietly closes, make sure your camera is connected
  * To see how long is required to process one frame, uncomment the following code in track_mm.py
  ```
