@@ -15,9 +15,9 @@ A follow-on install using Debian Build 222 for The Boot Image and Root File Syst
 * It's recommended to use latest builds and to also install the latest bootloader.
 * **Important:** Don't forget to install the proprietary firmware found in *linux-board-support-package-r01700.zip*!  The demo won't work without it.  This zip contains a sub-folder called *proprietary-linux*.  Once you have attained this file, copy all the files from this sub-folder into the */lib/firmware* directory of the DB820c that you have just installed your Debian build on.
 
-**Warning** This example requires building OpenCV from source.  This build on the DB820c (herein called the Target) requires a lot of board resources.  It's recommended to ssh into the Target and to have no applications, browsers or windows of any kind open during this installation process.  Build failures were experienced when Chromium was open, and these went away when did from a remote terminal.
+  **Warning** This example requires building OpenCV from source.  This build on the DB820c (herein called the Target) requires a lot of board resources.  It's recommended to ssh into the Target and to have no applications, browsers or windows of any kind open during this installation process.  Build failures were experienced when Chromium was open, and these went away when did from a remote terminal.
 
-**Note:** All commands in this section are executed on the Target from a ssh terminal window on the development host using `ssh linaro@<IP address of the Target>`.
+  **Note:** All commands in this section are executed on the Target from a ssh terminal window on the development host using `ssh linaro@<IP address of the Target>`.
 
 2. Prep for sofware installation
   ```
