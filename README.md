@@ -59,6 +59,7 @@ A follow-on install using Debian Build 222 for The Boot Image and Root File Syst
   pip install numpy
   pip install imutils
   ```
+  Note that numpy install takes a while.  Good time to get some tea.
   
 6. Download, build and install OpenCV version 3.2.0 (update commands/directory names below if a different version is used)
   ```
@@ -68,7 +69,7 @@ A follow-on install using Debian Build 222 for The Boot Image and Root File Syst
   wget -O opencv_contrib.zip https://github.com/Itseez/opencv_contrib/archive/3.2.0.zip
   unzip opencv_contrib.zip
   
-  cd opencv3.2.0
+  cd opencv-3.2.0
   mkdir build
   cd build
   cmake -D CMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-3.2.0/modules ..
