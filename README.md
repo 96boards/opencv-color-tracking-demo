@@ -41,7 +41,8 @@ A follow-on install using Debian Build 222 for The Boot Image and Root File Syst
   mkdir BUILD
   cd BUILD
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_SKIP_INSTALL_RPATH=YES -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/jasper-2.0.10 ..
-  makesudo make install
+  make
+  sudo make install
   cd ~
   ```
 5. Continue installing additional packages
