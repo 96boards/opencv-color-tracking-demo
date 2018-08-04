@@ -133,22 +133,36 @@ A small light turned out to be important to control the lighting.  Initial proto
 
 # Demo usage flow
 There are a few steps to perform in order to get the demo set up for your physical environmnet.  
+First download or clone this repo on the Target:
+```
+cd
+mkdir testfiles
+cd testfiles
+git clone https://github.com/dbharbin/OpenCV-color-tracking-demo.git
+cd OpenCV-color-tracking-demo/
+```
 
 ## Determine HSV Settings
-First, you must discover the HSV min and max values for your test environment.  This is sensative to lighting and the objects being identified by color. To do this, build out your environment with controlled lighting.  Then run colorIsolationApp.py from this repo on the DB820c.  
-`$python colorisolationapp.py`
+Now the HSV min and max values for your test environment must be determined using the *colorIsolationApp.py*.  This setup is sensative to lighting as well as the objects being identified by color. To overcome this, build out your environment with controlled lighting.  Then run *colorIsolationApp.py* from this repo on the DB820c.  
+```
+python colorIsolationApp.py
+```
 
 An example of this tool is shown below: 
 ![alt text](photos/colorisolationapp.png "HSV Tuning App")
 
-The field of view should contain your targeted environment along with all of the colors you wish to isolate from each other.  With the sliders in the colorIsolationApp.py, move them until only the color of interest can be seen and all other colors are blocked (black).  Press "Show" and the HSV min and max values will be printed to the terminal window.  Save these values for the next step.
+The field of view should contain your targeted environment along with all of the colors you wish to isolate from each other.  With the sliders in the colorIsolationApp.py, adjust each of them until only the color of interest can be seen and all other colors are blocked out(black).  Press "Show" and the HSV min and max values will be printed to the terminal window.  Save these values for the next step.
 
-Once the above is done for all colors, edit the `track_mm.py` file and update the HSV values in the initialization section for each color to match the values from the above step.  Save the file and you should be ready to go.
+Once the above is repeated for all colors, edit the `track_mm.py` file and update the HSV values in the initialization section for each color to match the values from the above step.  Save the file and you should be ready to go.
 
 ## Run the Demo
 
 Finally, run the track_mm.py file and watch the counters increment as the associated colors roll through the screen.
-`python track_mm.py 2> /dev/null`
+```
+cd ~/testfiles/OpenCV-color-tracking-demo/counter
+python track_mm.py 2> /dev/null
+```
+**Note:**  The `2> /dev/null` above suppresses the error output and can be used once all is working.  OpenCV has some upsuppressed and annoying messages in stderr regarding Corrupt JPEC data.  These can be ignored, and per the example above, even suppressed so that it's easier to see the debug messages from *track_mm.py*.
 
 The default configuration will display all six color masks as well as the frame image.  These look like the following:
 ![alt text](photos/Frame.png "Frame image")
