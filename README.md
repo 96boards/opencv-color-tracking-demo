@@ -72,7 +72,7 @@ A follow-on install using Debian Build 222 for The Boot Image and Root File Syst
   cd opencv-3.2.0
   mkdir build
   cd build
-  cmake -D CMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-3.2.0/modules ..
+  cmake -D CMAKE_BUILD_TYPE=RELEASE -DENABLE_PRECOMPILED_HEADERS=OFF -DCMAKE_INSTALL_PREFIX=/usr/local -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-3.2.0/modules ..
   ```
   **Hack Note:** To get the OpenCV to build, I had to resolve a ffmpeg version incompatibility.  Instead of changing versions, run the following script from the command line to make the build work:
   ```
