@@ -61,7 +61,7 @@ A follow-on install using Debian Build 222 for The Boot Image and Root File Syst
   ```
   Note that numpy install takes a while.  Good time to get some tea.
   
-  Now install a couple packages to support the colorIsolationApp.py
+  Now install a couple packages required by the *colorIsolationApp.py*
   ```
   sudo apt-get install python-tk
   pip install Pillow --user
