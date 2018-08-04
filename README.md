@@ -61,6 +61,13 @@ A follow-on install using Debian Build 222 for The Boot Image and Root File Syst
   ```
   Note that numpy install takes a while.  Good time to get some tea.
   
+  Now install a couple packages to support the colorIsolationApp.py
+  ```
+  sudo apt-get install python-tk
+  pip install Pillow --user
+  ```
+  
+  
 6. Download, build and install OpenCV version 3.2.0 (update commands/directory names below if a different version is used)
   ```
   cd ~
